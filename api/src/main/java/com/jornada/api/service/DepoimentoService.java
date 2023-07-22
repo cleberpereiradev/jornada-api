@@ -4,7 +4,8 @@ import com.jornada.api.dto.DadosAtualizacaoDepoimento;
 import com.jornada.api.dto.DadosDetalhamentoDepoimento;
 import com.jornada.api.dto.DadosListagemDepoimento;
 import com.jornada.api.entity.Depoimento;
-import com.jornada.api.exception.IdNotFoundException;
+import com.jornada.api.infra.exception.IdNotFoundException;
+import com.jornada.api.infra.exception.InvalidQuantityOfElementsException;
 import com.jornada.api.repository.DepoimentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class DepoimentoService {
     }
 
     public DadosDetalhamentoDepoimento findById(Long id) {
-        Depoimento depoimento = repository.findById(id).get();
+        var depoimento = repository.getReferenceById(id);
         return new DadosDetalhamentoDepoimento(depoimento);
 
     }
@@ -45,10 +46,10 @@ public class DepoimentoService {
     }
 
 
-    public List<DadosListagemDepoimento> findRandomDepoimentos() throws IdNotFoundException, InsufficientResourcesException {
+    public List<DadosListagemDepoimento> findRandomDepoimentos() {
         var lista = this.findAll();
         if(lista.size() < 3){
-            throw new InsufficientResourcesException();
+            throw new RuntimeException();
         }
         int max = lista.size() + 1;
         int min = Math.toIntExact(lista.get(0).id());
@@ -62,15 +63,10 @@ public class DepoimentoService {
                     listaIds.add(index);
                 }
             }
-            try{
-                for(Integer indice : listaIds){
-                    Optional<Depoimento> depoimento = this.repository.findById(Long.valueOf(indice));
-                    depoimentos.add(depoimento);
-                }
-            }catch (IdNotFoundException exception){
-                exception.printStackTrace();
+            for(Integer indice : listaIds){
+                Optional<Depoimento> depoimento = this.repository.findById(Long.valueOf(indice));
+                depoimentos.add(depoimento);
             }
-
         }
         List<DadosListagemDepoimento> res = depoimentos.stream().map(DadosListagemDepoimento::new).toList();
         return res;

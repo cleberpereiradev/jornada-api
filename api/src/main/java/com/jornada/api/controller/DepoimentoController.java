@@ -2,6 +2,7 @@ package com.jornada.api.controller;
 
 import com.jornada.api.dto.*;
 import com.jornada.api.entity.Depoimento;
+import com.jornada.api.infra.exception.InvalidQuantityOfElementsException;
 import com.jornada.api.service.DepoimentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ public class DepoimentoController {
     }
 
     @GetMapping(value = "/{id}")
+    @Transactional
     public ResponseEntity findById(@PathVariable Long id) {
         var depoimento = this.service.findById(id);
 
@@ -60,7 +62,7 @@ public class DepoimentoController {
     }
 
     @GetMapping(value = "depoimentos-home")
-    public List<DadosListagemDepoimento> listarDepoimentosRandom() throws InsufficientResourcesException {
+    public List<DadosListagemDepoimento> listarDepoimentosRandom() {
         return this.service.findRandomDepoimentos();
     }
 
