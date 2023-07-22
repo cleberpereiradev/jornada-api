@@ -1,11 +1,15 @@
 package com.jornada.api.controller;
 
-import com.jornada.api.dto.DepoimentoDTO;
+import com.jornada.api.dto.*;
 import com.jornada.api.entity.Depoimento;
 import com.jornada.api.service.DepoimentoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.naming.InsufficientResourcesException;
 import java.util.List;
 
 @RestController
@@ -16,24 +20,48 @@ public class DepoimentoController {
     private DepoimentoService service;
 
     @GetMapping
-    public List<DepoimentoDTO> findAll() {
-        return service.findAll();
+    public ResponseEntity<List<DadosListagemDepoimento>> findAll() {
+        var list = this.service.findAll();
+
+        return ResponseEntity.ok(list);
     }
 
-    @GetMapping
-    @RequestMapping(value = "/{id}")
-    public DepoimentoDTO findById(@PathVariable Long id) {
-        return service.findById(id);
+    @GetMapping(value = "/{id}")
+    public ResponseEntity findById(@PathVariable Long id) {
+        var depoimento = this.service.findById(id);
+
+        return ResponseEntity.ok(depoimento);
     }
 
     @PostMapping
-    public DepoimentoDTO save(@RequestBody Depoimento depoimento) {
-        return service.save(depoimento);
+    @Transactional
+    public ResponseEntity save(@RequestBody DadosCadastroDepoimento dados, UriComponentsBuilder uriBuilder) {
+        var depoimento = new Depoimento(dados);
+        this.service.save(depoimento);
+        var uri = uriBuilder.path("/depoimentos/{id}").buildAndExpand(depoimento.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(new DadosDepoimentoCompleto(depoimento));
     }
 
-//    @DeleteMapping
-//    @RequestMapping(value = "/{id}")
-//    public void deleteById() {
-//
-//    }
+    @PutMapping
+    @Transactional
+    public ResponseEntity update(@RequestBody DadosAtualizacaoDepoimento dados) {
+        this.service.update(dados);
+        return ResponseEntity.ok(new DadosDetalhamentoDepoimento(dados));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    @Transactional
+    public ResponseEntity deleteById(@PathVariable Long id) {
+
+        this.service.deleteById(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "depoimentos-home")
+    public List<DadosListagemDepoimento> listarDepoimentosRandom() throws InsufficientResourcesException {
+        return this.service.findRandomDepoimentos();
+    }
+
 }

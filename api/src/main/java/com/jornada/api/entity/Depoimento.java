@@ -1,6 +1,7 @@
 package com.jornada.api.entity;
 
-import com.jornada.api.dto.DepoimentoDTO;
+import com.jornada.api.dto.DadosAtualizacaoDepoimento;
+import com.jornada.api.dto.DadosCadastroDepoimento;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -27,6 +28,12 @@ public class Depoimento {
         this.nome = nome;
         this.textoDepoimento = textoDepoimento;
         this.imgUrl = imgUrl;
+    }
+
+    public Depoimento(DadosCadastroDepoimento dados) {
+        this.nome = dados.nome();
+        this.textoDepoimento = dados.textoDepoimento();
+        this.imgUrl = dados.imgUrl();
     }
 
     public Long getId() {
@@ -74,7 +81,15 @@ public class Depoimento {
         return Objects.hash(getId());
     }
 
-    public DepoimentoDTO obterDepoimentoDTO() {
-        return new DepoimentoDTO(this.id,this.nome,this.textoDepoimento,this.imgUrl);
+    public void atualizarDepoimento(DadosAtualizacaoDepoimento dados) {
+        if(dados.nome() != null) {
+            this.nome = dados.nome();
+        }
+        if(dados.textoDepoimento() != null) {
+            this.textoDepoimento = dados.textoDepoimento();
+        }
+        if(dados.imgUrl() != null) {
+            this.imgUrl = dados.imgUrl();
+        }
     }
 }
