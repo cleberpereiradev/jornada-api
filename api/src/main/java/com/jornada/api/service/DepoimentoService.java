@@ -1,20 +1,17 @@
 package com.jornada.api.service;
 
-import com.jornada.api.dto.DadosAtualizacaoDepoimento;
-import com.jornada.api.dto.DadosDetalhamentoDepoimento;
-import com.jornada.api.dto.DadosListagemDepoimento;
+import com.jornada.api.dto.depoimentos.DadosAtualizacaoDepoimento;
+import com.jornada.api.dto.depoimentos.DadosDetalhamentoDepoimento;
+import com.jornada.api.dto.depoimentos.DadosListagemDepoimento;
 import com.jornada.api.entity.Depoimento;
 import com.jornada.api.infra.exception.IdNotFoundException;
-import com.jornada.api.infra.exception.InvalidQuantityOfElementsException;
 import com.jornada.api.repository.DepoimentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.naming.InsufficientResourcesException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DepoimentoService {

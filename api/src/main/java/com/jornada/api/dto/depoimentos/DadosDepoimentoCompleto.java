@@ -1,4 +1,4 @@
-package com.jornada.api.dto;
+package com.jornada.api.dto.depoimentos;
 
 import com.jornada.api.entity.Depoimento;
 

@@ -1,7 +1,8 @@
 package com.jornada.api.entity;
 
-import com.jornada.api.dto.DadosAtualizacaoDepoimento;
-import com.jornada.api.dto.DadosCadastroDepoimento;
+import com.jornada.api.dto.depoimentos.DadosAtualizacaoDepoimento;
+import com.jornada.api.dto.depoimentos.DadosCadastroDepoimento;
+import com.jornada.api.dto.destinos.DadosCadastroDestino;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -35,6 +36,7 @@ public class Depoimento {
         this.textoDepoimento = dados.textoDepoimento();
         this.imgUrl = dados.imgUrl();
     }
+
 
     public Long getId() {
         return id;
