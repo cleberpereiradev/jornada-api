@@ -51,29 +51,25 @@ public class DepoimentoService {
         if(lista.size() < 3){
             throw new RuntimeException();
         }
-        int max = lista.size() + 1;
-        int min = Math.toIntExact(lista.get(0).id());
-        System.out.println(min);
-        List<Optional<Depoimento>> depoimentos = new ArrayList<>();
+        int max = lista.size();
+        List<DadosListagemDepoimento> depoimentos = new ArrayList<>();
         if(lista.size() != 0) {
             List<Integer> listaIds = new ArrayList<>();
-            while (listaIds.size() < 3){
-                int index = sortearNumeros(min,max);
+            while (depoimentos.size() < 3){
+                int index = sortearNumeros(max);
                 if(!listaIds.contains(index)){
+                    DadosListagemDepoimento depo = lista.get(index);
+                    depoimentos.add(depo);
                     listaIds.add(index);
                 }
-            }
-            for(Integer indice : listaIds){
-                Optional<Depoimento> depoimento = this.repository.findById(Long.valueOf(indice));
-                depoimentos.add(depoimento);
             }
         }
         List<DadosListagemDepoimento> res = depoimentos.stream().map(DadosListagemDepoimento::new).toList();
         return res;
     }
 
-    private int sortearNumeros(int min,int max) {
-        int random = (int) (Math.random() * (max - min) + min);
+    private int sortearNumeros(int max) {
+        int random = (int) (Math.random() * (max));
         return random;
     }
 }

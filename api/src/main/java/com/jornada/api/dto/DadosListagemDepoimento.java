@@ -12,4 +12,8 @@ public record DadosListagemDepoimento(Long id, String nome, String textoDepoimen
     public DadosListagemDepoimento(Optional<Depoimento> depoimento) {
         this(depoimento.get().getId(),depoimento.get().getNome(),depoimento.get().getTextoDepoimento(),depoimento.get().getImgUrl());
     }
+
+    public DadosListagemDepoimento(DadosListagemDepoimento dadosListagemDepoimento) {
+        this(dadosListagemDepoimento.id(), dadosListagemDepoimento.nome, dadosListagemDepoimento.textoDepoimento, dadosListagemDepoimento.imgUrl);
+    }
 }
