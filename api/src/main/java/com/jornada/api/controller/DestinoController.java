@@ -1,9 +1,6 @@
 package com.jornada.api.controller;
 
-import com.jornada.api.dto.depoimentos.DadosAtualizacaoDepoimento;
-import com.jornada.api.dto.depoimentos.DadosDetalhamentoDepoimento;
 import com.jornada.api.dto.destinos.*;
-import com.jornada.api.entity.Depoimento;
 import com.jornada.api.entity.Destino;
 import com.jornada.api.service.DestinoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/destinos")
@@ -49,6 +47,14 @@ public class DestinoController {
     public ResponseEntity update(@RequestBody DadosAtualizacaoDestino dados) {
         this.destinoService.update(dados);
         return ResponseEntity.ok(new DadosDetalhamentoDestino(dados));
+    }
+
+    @GetMapping(value = "/search")
+    public Optional<Destino> findDestinationByName (@RequestParam("nome") String nome) {
+        var destino = destinoService.searchByNome(nome);
+
+        return destino;
+
     }
 
 }
