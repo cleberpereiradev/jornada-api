@@ -24,6 +24,10 @@ public class DestinoController {
         var destinos = this.destinoService.findAll();
         return ResponseEntity.ok(destinos);
     }
+    @GetMapping(value = "/{id}")
+    public DadosListagemDestinoCompleto findById(@PathVariable Long id) {
+        return destinoService.findById(id);
+    }
 
     @PostMapping
     @Transactional
@@ -50,11 +54,10 @@ public class DestinoController {
     }
 
     @GetMapping(value = "/search")
-    public Optional<Destino> findDestinationByName (@RequestParam("nome") String nome) {
-        var destino = destinoService.searchByNome(nome);
+    public List<DadosListagemDestino> findDestinationByName (@RequestParam("nome") String nome) {
+        var destinos = destinoService.searchByNome(nome);
 
-        return destino;
-
+        return destinos;
     }
 
 }

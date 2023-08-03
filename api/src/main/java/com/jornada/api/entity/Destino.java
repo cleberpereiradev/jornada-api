@@ -1,86 +1,47 @@
 package com.jornada.api.entity;
 
-import com.jornada.api.dto.depoimentos.DadosAtualizacaoDepoimento;
 import com.jornada.api.dto.destinos.DadosAtualizacaoDestino;
 import com.jornada.api.dto.destinos.DadosCadastroDestino;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
-@Entity
-@Table(name = "destino")
+@Entity(name = "Destino")
+@Table(name = "destinos")
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Destino {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @NotNull
     private String nome;
-
+    @NotNull
     private String destinoImgUrl;
-
+    @NotNull
+    private String destinoImgUrl2;
+    @NotNull
+    @Column(length = 160)
+    private String metaDescricao;
+    private String descricaoCompleta;
+    @NotNull
     private BigDecimal preco;
-
-    public Destino() {
-    }
-
-    public Destino(Long id, String nome, String destinoImgUrl, BigDecimal preco) {
-        this.id = id;
-        this.nome = nome;
-        this.destinoImgUrl = destinoImgUrl;
-        this.preco = preco;
-    }
 
     public Destino(DadosCadastroDestino dados) {
         this.nome = dados.nome();
         this.destinoImgUrl = dados.destinoImgUrl();
+        this.destinoImgUrl2 = dados.destinoImgUrl2();
+        this.metaDescricao = dados.metaDescricao();
+        this.descricaoCompleta = dados.descricaoCompleta();
         this.preco = dados.preco();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getDestinoImgUrl() {
-        return destinoImgUrl;
-    }
-
-    public void setDestinoImgUrl(String destinoImgUrl) {
-        this.destinoImgUrl = destinoImgUrl;
-    }
-
-    public BigDecimal getPreco() {
-        return preco;
-    }
-
-    public void setPreco(BigDecimal preco) {
-        this.preco = preco;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Destino destino = (Destino) o;
-        return getId().equals(destino.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
     }
 
     public void atualizarDestino(DadosAtualizacaoDestino dados) {
@@ -90,8 +51,18 @@ public class Destino {
         if(dados.destinoImgUrl() != null) {
             this.destinoImgUrl = dados.destinoImgUrl();
         }
+        if(dados.destinoImgUrl2() != null) {
+            this.destinoImgUrl = dados.destinoImgUrl2();
+        }
+        if(dados.metaDescricao() != null) {
+            this.metaDescricao = dados.metaDescricao();
+        }
+        if(dados.descricaoCompleta() != null) {
+            this.descricaoCompleta = dados.descricaoCompleta();
+        }
         if(dados.preco() != null) {
             this.preco = dados.preco();
         }
     }
+
 }

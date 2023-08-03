@@ -2,15 +2,16 @@ package com.jornada.api.service;
 
 import com.jornada.api.dto.destinos.DadosAtualizacaoDestino;
 import com.jornada.api.dto.destinos.DadosListagemDestino;
+import com.jornada.api.dto.destinos.DadosListagemDestinoCompleto;
 import com.jornada.api.entity.Destino;
-import com.jornada.api.infra.exception.DestinoNaoEncontradoException;
+import com.jornada.api.infra.exception.ValidacaoException;
 import com.jornada.api.repository.DestinoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DestinoService {
@@ -23,12 +24,19 @@ public class DestinoService {
         return destinos.stream().map(DadosListagemDestino::new).toList();
     }
 
+    public DadosListagemDestinoCompleto findById(Long id) {
+        var destino = this.destinoRepository.findById(id).get();
+        return new DadosListagemDestinoCompleto(destino);
+    }
+
     public void save(Destino destino) {
         this.destinoRepository.save(destino);
     }
 
     public void deleteById(Long id) {
-        this.destinoRepository.deleteById(id);
+        if(this.destinoRepository.existsById(id)){
+            this.destinoRepository.deleteById(id);
+        }
     }
 
     public void update(@RequestBody DadosAtualizacaoDestino dados) {
@@ -36,17 +44,18 @@ public class DestinoService {
         destino.atualizarDestino(dados);
     }
 
-    public Optional<Destino> searchByNome(String nome) throws DestinoNaoEncontradoException{
+    public List<DadosListagemDestino> searchByNome(String nome){
         var destinos = destinoRepository.findAll();
-        Long id = null;
+        List<Destino> destinosEncontrados = new ArrayList<>();
         for(Destino destino : destinos) {
             if (destino.getNome().toLowerCase().contains(nome.toLowerCase())){
-                id = destino.getId();
-            } else {
-                throw new DestinoNaoEncontradoException("Nenhum destino foi encontrado");
+                var destinoEncontrado = destinoRepository.findById(destino.getId()).get();
+                destinosEncontrados.add(destinoEncontrado);
             }
         }
-        var destinoEncontado = destinoRepository.findById(id);
-        return destinoEncontado;
+        if(destinosEncontrados.size() == 0) {
+            throw new RuntimeException("Nenhum destino encontrado");
+        }
+        return destinosEncontrados.stream().map(DadosListagemDestino::new).toList();
     }
 }

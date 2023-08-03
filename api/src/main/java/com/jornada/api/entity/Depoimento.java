@@ -4,32 +4,31 @@ import com.jornada.api.dto.depoimentos.DadosAtualizacaoDepoimento;
 import com.jornada.api.dto.depoimentos.DadosCadastroDepoimento;
 import com.jornada.api.dto.destinos.DadosCadastroDestino;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
-@Entity
+@Entity(name = "Depoimento")
 @Table(name = "depoimentos")
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Depoimento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @NotNull
     private String nome;
-
+    @NotNull
     @Column(columnDefinition = "TEXT", name = "depoimento")
     private String textoDepoimento;
-
+    @NotNull
     private String imgUrl;
-
-    public Depoimento() {
-    }
-
-    public Depoimento(Long id, String nome, String textoDepoimento, String imgUrl) {
-        this.id = id;
-        this.nome = nome;
-        this.textoDepoimento = textoDepoimento;
-        this.imgUrl = imgUrl;
-    }
 
     public Depoimento(DadosCadastroDepoimento dados) {
         this.nome = dados.nome();
@@ -37,51 +36,6 @@ public class Depoimento {
         this.imgUrl = dados.imgUrl();
     }
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getTextoDepoimento() {
-        return textoDepoimento;
-    }
-
-    public void setTextoDepoimento(String textoDepoimento) {
-        this.textoDepoimento = textoDepoimento;
-    }
-
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Depoimento that = (Depoimento) o;
-        return getId().equals(that.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
-    }
 
     public void atualizarDepoimento(DadosAtualizacaoDepoimento dados) {
         if(dados.nome() != null) {
